@@ -1,10 +1,10 @@
-# Conduit.Mediator
+# AxisCore.Mediator
 
 [![CI/CD](https://github.com/tuzajohn/AxisCore/actions/workflows/ci.yml/badge.svg)](https://github.com/tuzajohn/AxisCore/actions/workflows/ci.yml)
-[![NuGet](https://img.shields.io/nuget/v/Conduit.Mediator.svg)](https://www.nuget.org/packages/Conduit.Mediator/)
+[![NuGet](https://img.shields.io/nuget/v/AxisCore.Mediator.svg)](https://www.nuget.org/packages/AxisCore.Mediator/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A high-performance, production-ready .NET library implementing the Mediator pattern. Conduit.Mediator provides a simple, ergonomic API similar to MediatR while delivering superior performance through minimal allocations, ValueTask optimization, and intelligent handler caching.
+A high-performance, production-ready .NET library implementing the Mediator pattern. AxisCore.Mediator provides a simple, ergonomic API similar to MediatR while delivering superior performance through minimal allocations, ValueTask optimization, and intelligent handler caching.
 
 ## Features
 
@@ -21,7 +21,7 @@ A high-performance, production-ready .NET library implementing the Mediator patt
 ## Installation
 
 ```bash
-dotnet add package Conduit.Mediator
+dotnet add package AxisCore.Mediator
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ dotnet add package Conduit.Mediator
 ### 1. Define a Request and Handler
 
 ```csharp
-using Conduit.Mediator;
+using AxisCore.Mediator;
 
 // Define a request
 public class GreetingRequest : IRequest<string>
@@ -51,7 +51,7 @@ public class GreetingRequestHandler : IRequestHandler<GreetingRequest, string>
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Conduit.Mediator.DependencyInjection;
+using AxisCore.Mediator.DependencyInjection;
 
 var services = new ServiceCollection();
 
@@ -252,7 +252,7 @@ services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>
 
 ## Performance
 
-Conduit.Mediator is designed for high-performance scenarios:
+AxisCore.Mediator is designed for high-performance scenarios:
 
 - **ValueTask**: Reduces allocations for synchronous or cached operations
 - **Handler Caching**: Compiled delegates cached for fast resolution
@@ -263,14 +263,14 @@ Conduit.Mediator is designed for high-performance scenarios:
 
 | Method           | Mean     | Error   | Allocated |
 |-----------------|----------|---------|-----------|
-| Conduit_Send    | 45.2 ns  | 0.4 ns  | 0 B       |
+| AxisCore_Send    | 45.2 ns  | 0.4 ns  | 0 B       |
 | MediatR_Send    | 78.3 ns  | 1.2 ns  | 64 B      |
-| Conduit_Publish | 123.1 ns | 2.1 ns  | 0 B       |
+| AxisCore_Publish | 123.1 ns | 2.1 ns  | 0 B       |
 | MediatR_Publish | 198.4 ns | 3.4 ns  | 128 B     |
 
 *Run your own benchmarks:*
 ```bash
-dotnet run --project benchmarks/Conduit.Mediator.Benchmarks -c Release
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 ```
 
 ## Migration from MediatR

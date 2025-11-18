@@ -27,7 +27,7 @@ A clear and concise description of what you expected to happen.
 What actually happened.
 
 ## Environment
-- Conduit.Mediator Version: [e.g. 1.0.0]
+- AxisCore.Mediator Version: [e.g. 1.0.0]
 - .NET Version: [e.g. .NET 8.0]
 - OS: [e.g. Windows 11, Ubuntu 22.04]
 - IDE: [e.g. Visual Studio 2022, Rider 2023.3]

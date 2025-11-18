@@ -1,6 +1,6 @@
 # Performance Guide
 
-Conduit.Mediator is designed for high-performance scenarios with minimal allocations and low latency. This guide explains the performance characteristics and optimization strategies.
+AxisCore.Mediator is designed for high-performance scenarios with minimal allocations and low latency. This guide explains the performance characteristics and optimization strategies.
 
 ## Key Performance Features
 
@@ -61,12 +61,12 @@ Intel Core i7-9700K CPU 3.60GHz
 
 |        Method |      Mean |    Error |   StdDev | Allocated |
 |-------------- |----------:|---------:|---------:|----------:|
-| Conduit_Send  |  45.23 ns | 0.421 ns | 0.394 ns |       0 B |
+| AxisCore_Send  |  45.23 ns | 0.421 ns | 0.394 ns |       0 B |
 | MediatR_Send  |  78.34 ns | 1.187 ns | 1.110 ns |      64 B |
 ```
 
 **Analysis:**
-- Conduit.Mediator is **42% faster**
+- AxisCore.Mediator is **42% faster**
 - **Zero allocations** vs 64 bytes for MediatR
 - Scales better under high load
 
@@ -75,12 +75,12 @@ Intel Core i7-9700K CPU 3.60GHz
 ```
 |           Method |      Mean |    Error |   StdDev | Allocated |
 |----------------- |----------:|---------:|---------:|----------:|
-| Conduit_Publish  | 123.45 ns | 2.112 ns | 1.976 ns |       0 B |
+| AxisCore_Publish  | 123.45 ns | 2.112 ns | 1.976 ns |       0 B |
 | MediatR_Publish  | 198.67 ns | 3.421 ns | 3.199 ns |     128 B |
 ```
 
 **Analysis:**
-- Conduit.Mediator is **38% faster**
+- AxisCore.Mediator is **38% faster**
 - **Zero allocations** for cached handlers
 - Parallel publishing is highly optimized
 
@@ -298,7 +298,7 @@ Always profile before optimizing:
 
 ```bash
 # Run benchmarks
-dotnet run --project benchmarks/Conduit.Mediator.Benchmarks -c Release
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 
 # Collect memory allocations
 dotnet-counters monitor --process-id <PID> System.Runtime
@@ -353,7 +353,7 @@ In production scenarios:
 
 ## Conclusion
 
-Conduit.Mediator is built for performance:
+AxisCore.Mediator is built for performance:
 - Use `ValueTask` for minimal allocations
 - Handler caching eliminates reflection overhead
 - Choose appropriate lifetimes and strategies

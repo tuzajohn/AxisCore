@@ -1,6 +1,6 @@
-# Contributing to Conduit.Mediator
+# Contributing to AxisCore.Mediator
 
-Thank you for your interest in contributing to Conduit.Mediator! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to AxisCore.Mediator! This document provides guidelines and instructions for contributing.
 
 ## Code of Conduct
 
@@ -58,7 +58,7 @@ dotnet build
 dotnet test
 
 # Run benchmarks
-dotnet run --project benchmarks/Conduit.Mediator.Benchmarks -c Release
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 ```
 
 ## Coding Standards
@@ -130,12 +130,12 @@ public async Task Send_WithValidRequest_ReturnsResponse()
 ```
 AxisCore/
 ├── src/
-│   └── Conduit.Mediator/          # Main library
+│   └── AxisCore.Mediator/          # Main library
 ├── tests/
-│   ├── Conduit.Mediator.Tests/           # Unit tests
-│   └── Conduit.Mediator.IntegrationTests/ # Integration tests
+│   ├── AxisCore.Mediator.Tests/           # Unit tests
+│   └── AxisCore.Mediator.IntegrationTests/ # Integration tests
 ├── benchmarks/
-│   └── Conduit.Mediator.Benchmarks/      # Performance benchmarks
+│   └── AxisCore.Mediator.Benchmarks/      # Performance benchmarks
 ├── samples/
 │   └── BasicUsage/                        # Sample applications
 └── docs/                                  # Documentation
@@ -209,7 +209,7 @@ When making performance-related changes:
 4. **Explain any regressions**
 
 ```bash
-dotnet run --project benchmarks/Conduit.Mediator.Benchmarks -c Release
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 ```
 
 ## Documentation
@@ -262,4 +262,4 @@ Contributors will be:
 - Credited in the README (for significant contributions)
 - Thanked in commit messages
 
-Thank you for contributing to Conduit.Mediator!
+Thank you for contributing to AxisCore.Mediator!

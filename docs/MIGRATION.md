@@ -1,14 +1,14 @@
-# Migration Guide from MediatR to Conduit.Mediator
+# Migration Guide from MediatR to AxisCore.Mediator
 
-This guide helps you migrate from MediatR to Conduit.Mediator. The libraries share similar APIs, making migration straightforward.
+This guide helps you migrate from MediatR to AxisCore.Mediator. The libraries share similar APIs, making migration straightforward.
 
 ## Quick Overview
 
-| Aspect | MediatR | Conduit.Mediator |
+| Aspect | MediatR | AxisCore.Mediator |
 |--------|---------|------------------|
 | Return Type | `Task<T>` | `ValueTask<T>` |
 | Notification Publishing | `Task` | `ValueTask` |
-| Package Name | `MediatR` | `Conduit.Mediator` |
+| Package Name | `MediatR` | `AxisCore.Mediator` |
 | Registration | `AddMediatR()` | `AddMediator()` |
 
 ## Step-by-Step Migration
@@ -22,10 +22,10 @@ Remove MediatR:
 <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="12.x" />
 ```
 
-Add Conduit.Mediator:
+Add AxisCore.Mediator:
 ```xml
 <!-- Add -->
-<PackageReference Include="Conduit.Mediator" Version="1.x" />
+<PackageReference Include="AxisCore.Mediator" Version="1.x" />
 ```
 
 ### 2. Update Using Directives
@@ -35,10 +35,10 @@ Add Conduit.Mediator:
 using MediatR;
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
-using Conduit.Mediator;
-using Conduit.Mediator.DependencyInjection;
+using AxisCore.Mediator;
+using AxisCore.Mediator.DependencyInjection;
 ```
 
 ### 3. Update Service Registration
@@ -49,7 +49,7 @@ services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
 services.AddMediatorFromAssembly();
 // Or
@@ -70,7 +70,7 @@ public class MyHandler : IRequestHandler<MyRequest, MyResponse>
 }
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
 public class MyHandler : IRequestHandler<MyRequest, MyResponse>
 {
@@ -105,7 +105,7 @@ public class MyNotificationHandler : INotificationHandler<MyNotification>
 }
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
 public class MyNotificationHandler : INotificationHandler<MyNotification>
 {
@@ -138,7 +138,7 @@ public class LoggingBehavior<TRequest, TResponse>
 }
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
 public class LoggingBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
@@ -167,7 +167,7 @@ var response = await _mediator.Send(new MyRequest());
 await _mediator.Publish(new MyNotification());
 ```
 
-**After (Conduit.Mediator):**
+**After (AxisCore.Mediator):**
 ```csharp
 var response = await _mediator.Send(new MyRequest());
 await _mediator.Publish(new MyNotification());
@@ -189,18 +189,18 @@ await _mediator.Publish(new MyNotification());
 
 ### Pre/Post Processors
 
-✅ **Fully Compatible** - Conduit.Mediator supports the same pre/post processor pattern
+✅ **Fully Compatible** - AxisCore.Mediator supports the same pre/post processor pattern
 
 ### Streaming
 
-✅ **Enhanced** - Conduit.Mediator has built-in streaming support via `IStreamRequest<T>`
+✅ **Enhanced** - AxisCore.Mediator has built-in streaming support via `IStreamRequest<T>`
 
 **MediatR approach:**
 ```csharp
 // Custom implementation needed
 ```
 
-**Conduit.Mediator:**
+**AxisCore.Mediator:**
 ```csharp
 public class StreamRequest : IStreamRequest<int> { }
 
@@ -222,7 +222,7 @@ public class StreamHandler : IStreamRequestHandler<StreamRequest, int>
 
 ### Notification Publishing Strategies
 
-**Conduit.Mediator** provides explicit control:
+**AxisCore.Mediator** provides explicit control:
 
 ```csharp
 services.AddMediator(options =>
@@ -244,7 +244,7 @@ services.AddMediatR(cfg =>
 });
 ```
 
-**Conduit.Mediator:**
+**AxisCore.Mediator:**
 ```csharp
 services.AddMediator(
     new[] { assembly },
@@ -267,17 +267,17 @@ using MediatR;
 // Uses MediatR.Unit
 ```
 
-**Conduit.Mediator:**
+**AxisCore.Mediator:**
 ```csharp
-using Conduit.Mediator;
-// Uses Conduit.Mediator.Unit
+using AxisCore.Mediator;
+// Uses AxisCore.Mediator.Unit
 ```
 
 Both work the same way for void requests.
 
 ### 3. Built-in Behaviors
 
-Conduit.Mediator includes several built-in behaviors:
+AxisCore.Mediator includes several built-in behaviors:
 - `LoggingBehavior<TRequest, TResponse>`
 - `PerformanceBehavior<TRequest, TResponse>`
 - `ValidationBehavior<TRequest, TResponse>`
@@ -290,7 +290,7 @@ services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(assembly1, assembly2));
 ```
 
-**Conduit.Mediator:**
+**AxisCore.Mediator:**
 ```csharp
 services.AddMediator(new[] { assembly1, assembly2 });
 ```
@@ -304,7 +304,7 @@ After migration, you should see:
 
 Run benchmarks to measure the improvement:
 ```bash
-dotnet run --project benchmarks/Conduit.Mediator.Benchmarks -c Release
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 ```
 
 ## Common Pitfalls
@@ -373,14 +373,14 @@ _mediator.Send(Arg.Any<MyRequest>())
 
 For large codebases:
 
-1. **Phase 1**: Install Conduit.Mediator alongside MediatR
-2. **Phase 2**: Create new handlers with Conduit.Mediator
+1. **Phase 1**: Install AxisCore.Mediator alongside MediatR
+2. **Phase 2**: Create new handlers with AxisCore.Mediator
 3. **Phase 3**: Migrate existing handlers one module at a time
 4. **Phase 4**: Remove MediatR once fully migrated
 
 ## Conclusion
 
-Migration from MediatR to Conduit.Mediator is straightforward:
+Migration from MediatR to AxisCore.Mediator is straightforward:
 - Update package references
 - Change `Task` to `ValueTask`
 - Update registration calls

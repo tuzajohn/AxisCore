@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Conduit.Mediator;
-using Conduit.Mediator.DependencyInjection;
-using Conduit.Mediator.Behaviors;
+using AxisCore.Mediator;
+using AxisCore.Mediator.DependencyInjection;
+using AxisCore.Mediator.Behaviors;
 
 namespace BasicUsage;
 
@@ -20,7 +20,7 @@ public class Program
             builder.SetMinimumLevel(LogLevel.Information);
         });
 
-        // Add Conduit.Mediator and scan this assembly for handlers
+        // Add AxisCore.Mediator and scan this assembly for handlers
         services.AddMediatorFromAssembly(options =>
         {
             options.NotificationPublisherStrategy = NotificationPublisherStrategy.PublishParallel;
@@ -33,7 +33,7 @@ public class Program
         var mediator = provider.GetRequiredService<IMediator>();
         var logger = provider.GetRequiredService<ILogger<Program>>();
 
-        logger.LogInformation("=== Conduit.Mediator Sample Application ===\n");
+        logger.LogInformation("=== AxisCore.Mediator Sample Application ===\n");
 
         // Example 1: Simple Request/Response
         logger.LogInformation("Example 1: Simple Request/Response");

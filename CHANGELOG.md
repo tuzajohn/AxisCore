@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-XX
 
 ### Added
-- Initial release of Conduit.Mediator
+- Initial release of AxisCore.Mediator
 - Core mediator pattern implementation
   - `IRequest<TResponse>` and `IRequestHandler<TRequest, TResponse>`
   - `INotification` and `INotificationHandler<TNotification>`

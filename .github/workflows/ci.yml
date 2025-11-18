@@ -81,7 +81,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Run benchmarks
-      run: dotnet run --project benchmarks/Conduit.Mediator.Benchmarks/Conduit.Mediator.Benchmarks.csproj -c Release -- --filter '*' --exporters json
+      run: dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks/AxisCore.Mediator.Benchmarks.csproj -c Release -- --filter '*' --exporters json
 
     - name: Upload benchmark results
       uses: actions/upload-artifact@v4
@@ -109,7 +109,7 @@ jobs:
       run: dotnet restore
 
     - name: Pack
-      run: dotnet pack src/Conduit.Mediator/Conduit.Mediator.csproj --configuration Release --no-restore --output ./artifacts
+      run: dotnet pack src/AxisCore.Mediator/AxisCore.Mediator.csproj --configuration Release --no-restore --output ./artifacts
 
     - name: Upload NuGet package
       uses: actions/upload-artifact@v4
