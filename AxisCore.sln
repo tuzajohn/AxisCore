@@ -1,0 +1,58 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Mediator", "src\Conduit.Mediator\Conduit.Mediator.csproj", "{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Mediator.Tests", "tests\Conduit.Mediator.Tests\Conduit.Mediator.Tests.csproj", "{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Mediator.IntegrationTests", "tests\Conduit.Mediator.IntegrationTests\Conduit.Mediator.IntegrationTests.csproj", "{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Mediator.Benchmarks", "benchmarks\Conduit.Mediator.Benchmarks\Conduit.Mediator.Benchmarks.csproj", "{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicUsage", "samples\BasicUsage\BasicUsage.csproj", "{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D} = {8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1A}
+		{B2C3D4E5-F6A7-4B5C-8D7E-9F0A1B2C3D4E} = {8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1B}
+		{C3D4E5F6-A7B8-4C5D-8E7F-9A0B1C2D3E4F} = {8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1B}
+		{D4E5F6A7-B8C9-4D5E-8F7A-9B0C1D2E3F4A} = {8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1C}
+		{E5F6A7B8-C9DA-4E5F-8A7B-9C0D1E2F3A4B} = {8F0C1D1E-1C4A-4F1A-8F1A-1C4A4F1A8F1D}
+	EndGlobalSection
+EndGlobal
