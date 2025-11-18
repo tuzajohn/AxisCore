@@ -8,12 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- .NET 10 support with multi-targeting (net10.0, net8.0, net6.0)
-- .NET 10 is now the primary target framework
+- .NET 9 support with multi-targeting (net10.0, net8.0, net6.0)
+- .NET 9 is now the primary target framework
 
 ### Changed
-- Updated CI/CD to test on .NET 10, .NET 8, and .NET 6
-- Benchmark projects now run on .NET 10, .NET 8, and .NET 6
+- Updated CI/CD to test on .NET 9, .NET 8, and .NET 6
+- Benchmark projects now run on .NET 9, .NET 8, and .NET 6
 
 ## [1.0.0] - 2024-01-XX
 
@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Concurrency tests
   - Streaming tests
 - Benchmarks comparing to MediatR
-- Multi-targeting support (.NET 10, .NET 8, .NET 6)
+- Multi-targeting support (.NET 9, .NET 8, .NET 6)
 - Complete documentation
   - README with quick start guide
   - Migration guide from MediatR

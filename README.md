@@ -9,7 +9,7 @@ A high-performance, production-ready .NET library implementing the Mediator patt
 ## Features
 
 - **High Performance**: ValueTask-based, zero-allocation hot path with compiled delegate caching
-- **Multi-Targeting**: Supports .NET 10, .NET 8, and .NET 6
+- **Multi-Targeting**: Supports .NET 9, .NET 8, and .NET 6
 - **Simple API**: Clean, intuitive interface similar to MediatR
 - **Pipeline Behaviors**: Middleware-style request processing
 - **DI First**: Seamless integration with Microsoft.Extensions.DependencyInjection
