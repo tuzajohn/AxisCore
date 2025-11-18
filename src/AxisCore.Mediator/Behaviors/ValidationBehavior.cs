@@ -55,7 +55,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 /// Validator interface for request validation.
 /// </summary>
 /// <typeparam name="T">Type to validate</typeparam>
-public interface IValidator<in T>
+public interface IValidator<T>
 {
     /// <summary>
     /// Validates the instance.
