@@ -48,12 +48,19 @@ internal sealed class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHa
             return await requestHandler.Handle(typedRequest, cancellationToken).ConfigureAwait(false);
         };
 
-        // Wrap with behaviors in reverse order
-        for (int i = behaviors.Length - 1; i >= 0; i--)
+        // Wrap with behaviors in reverse order (iterate forward to apply in LIFO)
+        foreach (var behavior in behaviors.Reverse())
         {
-            var behavior = behaviors[i];
-            var next = handler;
-            handler = () => behavior.Handle(typedRequest, next, cancellationToken);
+            handler = WrapBehavior(behavior, handler, typedRequest, cancellationToken);
+        }
+
+        static RequestHandlerDelegate<TResponse> WrapBehavior(
+            IPipelineBehavior<TRequest, TResponse> behavior,
+            RequestHandlerDelegate<TResponse> next,
+            TRequest request,
+            CancellationToken cancellationToken)
+        {
+            return () => behavior.Handle(request, next, cancellationToken);
         }
 
         // Execute the pipeline

@@ -142,6 +142,12 @@ public sealed class Mapper : IMapper
                 }
                 catch (Exception ex) when (_configuration.ThrowOnMappingFailure)
                 {
+                    // Preserve the original exception message if it's already an InvalidOperationException
+                    if (ex is InvalidOperationException)
+                    {
+                        throw;
+                    }
+
                     throw new InvalidOperationException(
                         $"Failed to map property '{destProp.Name}' from {sourceType.Name} to {destinationType.Name}", ex);
                 }
