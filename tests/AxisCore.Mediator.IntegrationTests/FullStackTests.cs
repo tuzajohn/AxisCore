@@ -164,12 +164,6 @@ public class FullStackTests
     {
         public static string? LastProductId { get; private set; }
 
-        private readonly CreateOrderCommand? _command;
-
-        public UpdateInventoryNotificationHandler()
-        {
-        }
-
         public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
         {
             LastProductId = "PROD-123"; // Simulated
