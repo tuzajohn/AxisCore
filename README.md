@@ -18,7 +18,7 @@ A high-performance mediator pattern implementation providing request/response an
 - Pipeline behaviors for cross-cutting concerns
 - Request/response, pub/sub, and streaming patterns
 - Minimal dependencies (only Microsoft.Extensions abstractions)
-- Multi-targeting: .NET 6, 8, 9, and 10
+- Multi-targeting: .NET 6, 8, and 9
 
 **Quick Start:**
 ```csharp
@@ -53,7 +53,7 @@ A high-performance object mapper with automatic type conversion, collection hand
 - Case-insensitive property matching
 - Custom mapping configuration
 - Compiled expression caching for performance
-- Multi-targeting: .NET 6, 8, 9, and 10
+- Multi-targeting: .NET 6, 8, and 9
 
 **Quick Start:**
 ```csharp
@@ -112,7 +112,6 @@ AxisCore libraries are built with the following principles:
 ## Target Frameworks
 
 All libraries support:
-- .NET 10 (preview)
 - .NET 9 (current)
 - .NET 8 (LTS)
 - .NET 6 (LTS)
