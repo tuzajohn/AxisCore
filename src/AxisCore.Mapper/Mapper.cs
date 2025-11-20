@@ -289,51 +289,54 @@ public sealed class Mapper : IMapper
             // Handle numeric conversions from string
             if (targetType == typeof(int) || targetType == typeof(int?))
             {
-                if (int.TryParse(stringValue, out var intResult))
-                    return intResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to int");
+                return int.TryParse(stringValue, out var intResult)
+                    ? (object)intResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to int");
             }
 
             if (targetType == typeof(long) || targetType == typeof(long?))
             {
-                if (long.TryParse(stringValue, out var longResult))
-                    return longResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to long");
+                return long.TryParse(stringValue, out var longResult)
+                    ? (object)longResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to long");
             }
 
             if (targetType == typeof(double) || targetType == typeof(double?))
             {
-                if (double.TryParse(stringValue, out var doubleResult))
-                    return doubleResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to double");
+                return double.TryParse(stringValue, out var doubleResult)
+                    ? (object)doubleResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to double");
             }
 
             if (targetType == typeof(decimal) || targetType == typeof(decimal?))
             {
-                if (decimal.TryParse(stringValue, out var decimalResult))
-                    return decimalResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to decimal");
+                return decimal.TryParse(stringValue, out var decimalResult)
+                    ? (object)decimalResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to decimal");
             }
 
             if (targetType == typeof(bool) || targetType == typeof(bool?))
             {
-                if (bool.TryParse(stringValue, out var boolResult))
-                    return boolResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to bool");
+                return bool.TryParse(stringValue, out var boolResult)
+                    ? (object)boolResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to bool");
             }
 
             if (targetType == typeof(Guid) || targetType == typeof(Guid?))
             {
                 if (Guid.TryParse(stringValue, out var guidResult))
+                {
                     return guidResult;
+                }
+
                 throw new InvalidOperationException($"Cannot convert '{stringValue}' to Guid");
             }
 
             if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
             {
-                if (DateTime.TryParse(stringValue, out var dateResult))
-                    return dateResult;
-                throw new InvalidOperationException($"Cannot convert '{stringValue}' to DateTime");
+                return DateTime.TryParse(stringValue, out var dateResult)
+                    ? (object)dateResult
+                    : throw new InvalidOperationException($"Cannot convert '{stringValue}' to DateTime");
             }
         }
 
@@ -352,18 +355,19 @@ public sealed class Mapper : IMapper
     private static bool CanDirectConvert(Type sourceType, Type destType)
     {
         if (sourceType == destType)
+        {
             return true;
+        }
 
         // Check if both are primitives or common value types
         if (IsPrimitiveOrCommon(sourceType) && IsPrimitiveOrCommon(destType))
+        {
             return true;
+        }
 
         // Check if conversion is possible via Convert.ChangeType
-        if (typeof(IConvertible).IsAssignableFrom(sourceType) &&
-            typeof(IConvertible).IsAssignableFrom(destType))
-            return true;
-
-        return false;
+        return typeof(IConvertible).IsAssignableFrom(sourceType) &&
+            typeof(IConvertible).IsAssignableFrom(destType);
     }
 
     private static bool IsPrimitiveOrCommon(Type type)
@@ -380,7 +384,9 @@ public sealed class Mapper : IMapper
     private static bool IsCollection(Type type)
     {
         if (type == typeof(string))
+        {
             return false;
+        }
 
         return type.IsArray ||
                (type.IsGenericType && (
