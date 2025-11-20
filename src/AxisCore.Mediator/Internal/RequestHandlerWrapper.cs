@@ -48,8 +48,7 @@ internal sealed class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHa
             return await requestHandler.Handle(typedRequest, cancellationToken).ConfigureAwait(false);
         };
 
-        // Wrap with behaviors in reverse order (iterate forward to apply in LIFO)
-        behaviors.Reverse();
+        // Wrap with behaviors (last registered becomes outermost)
         foreach (var behavior in behaviors)
         {
             handler = WrapBehavior(behavior, handler, typedRequest, cancellationToken);
