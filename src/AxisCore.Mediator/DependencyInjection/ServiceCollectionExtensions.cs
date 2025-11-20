@@ -171,6 +171,22 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Registers services (handlers, behaviors, etc.) from the specified assembly.
+    /// This is an alias for RegisterHandlersFromAssembly for MediatR compatibility.
+    /// </summary>
+    /// <param name="services">Service collection</param>
+    /// <param name="assembly">Assembly to scan</param>
+    /// <param name="lifetime">Service lifetime for handlers</param>
+    /// <returns>Service collection for chaining</returns>
+    public static IServiceCollection RegisterServicesFromAssembly(
+        this IServiceCollection services,
+        Assembly assembly,
+        ServiceLifetime lifetime = ServiceLifetime.Transient)
+    {
+        return services.RegisterHandlersFromAssembly(assembly, lifetime);
+    }
+
+    /// <summary>
     /// Manually registers a request handler.
     /// </summary>
     /// <typeparam name="TRequest">Request type</typeparam>
