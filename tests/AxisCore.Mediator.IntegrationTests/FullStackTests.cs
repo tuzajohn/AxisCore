@@ -95,15 +95,18 @@ public class FullStackTests
         var executionOrder = new List<string>();
         var services = new ServiceCollection();
         services.AddMediator();
-        services.AddRequestHandler<OrderedRequest, string, OrderedRequestHandler>();
+
+        // Register handler
+        services.AddTransient<IRequestHandler<OrderedRequest, string>>(
+            sp => new OrderedRequestHandler(executionOrder));
 
         // Add behaviors in specific order
         services.AddTransient<IPipelineBehavior<OrderedRequest, string>>(
-            _ => new OrderedBehavior("First", executionOrder));
+            sp => new OrderedBehavior("First", executionOrder));
         services.AddTransient<IPipelineBehavior<OrderedRequest, string>>(
-            _ => new OrderedBehavior("Second", executionOrder));
+            sp => new OrderedBehavior("Second", executionOrder));
         services.AddTransient<IPipelineBehavior<OrderedRequest, string>>(
-            _ => new OrderedBehavior("Third", executionOrder));
+            sp => new OrderedBehavior("Third", executionOrder));
 
         var provider = services.BuildServiceProvider();
         var mediator = provider.GetRequiredService<IMediator>();
@@ -201,9 +204,17 @@ public class FullStackTests
 
     public class OrderedRequestHandler : IRequestHandler<OrderedRequest, string>
     {
+        private readonly List<string> _executionOrder;
+
+        public OrderedRequestHandler(List<string> executionOrder)
+        {
+            _executionOrder = executionOrder;
+        }
+
         public ValueTask<string> Handle(OrderedRequest request, CancellationToken cancellationToken)
         {
-            return new ValueTask<string>("Handler");
+            _executionOrder.Add("Handler");
+            return new ValueTask<string>("Result");
         }
     }
 
@@ -225,7 +236,6 @@ public class FullStackTests
         {
             _executionOrder.Add($"{_name}-Before");
             var response = await next();
-            _executionOrder.Add(response);
             _executionOrder.Add($"{_name}-After");
             return response;
         }
