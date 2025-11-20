@@ -108,8 +108,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Pack
+    - name: Pack Mediator
       run: dotnet pack src/AxisCore.Mediator/AxisCore.Mediator.csproj --configuration Release --no-restore --output ./artifacts
+
+    - name: Pack Mapper
+      run: dotnet pack src/AxisCore.Mapper/AxisCore.Mapper.csproj --configuration Release --no-restore --output ./artifacts
 
     - name: Upload NuGet package
       uses: actions/upload-artifact@v4
