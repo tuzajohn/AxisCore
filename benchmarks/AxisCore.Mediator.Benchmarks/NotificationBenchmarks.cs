@@ -1,3 +1,4 @@
+using AxisCore.Mediator.DependencyInjection;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using Microsoft.Extensions.DependencyInjection;
