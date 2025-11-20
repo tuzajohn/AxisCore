@@ -1,10 +1,12 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using Microsoft.Extensions.DependencyInjection;
+using AxisCore.Mediator.DependencyInjection;
 
 namespace AxisCore.Mediator.Benchmarks;
 
 [MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net100)]
 [SimpleJob(RuntimeMoniker.Net90)]
 [SimpleJob(RuntimeMoniker.Net80)]
 [SimpleJob(RuntimeMoniker.Net60)]
