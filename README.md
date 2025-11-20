@@ -1,152 +1,254 @@
-# AxisCore.Mediator
+# AxisCore
 
 [![CI/CD](https://github.com/tuzajohn/AxisCore/actions/workflows/ci.yml/badge.svg)](https://github.com/tuzajohn/AxisCore/actions/workflows/ci.yml)
-[![NuGet](https://img.shields.io/nuget/v/AxisCore.Mediator.svg)](https://www.nuget.org/packages/AxisCore.Mediator/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A high-performance, production-ready .NET library implementing the Mediator pattern. AxisCore.Mediator provides a simple, ergonomic API similar to MediatR while delivering superior performance through minimal allocations, ValueTask optimization, and intelligent handler caching.
+High-performance .NET libraries for building modern, efficient applications. AxisCore provides production-ready implementations of common patterns with a focus on performance, minimal dependencies, and developer experience.
 
-## Features
+## Libraries
 
-- **High Performance**: ValueTask-based, zero-allocation hot path with compiled delegate caching
-- **Multi-Targeting**: Supports .NET 9, .NET 8, and .NET 6
-- **Simple API**: Clean, intuitive interface similar to MediatR
-- **Pipeline Behaviors**: Middleware-style request processing
-- **DI First**: Seamless integration with Microsoft.Extensions.DependencyInjection
-- **Streaming Support**: Built-in support for IAsyncEnumerable streaming responses
-- **Flexible Publishing**: Multiple notification publishing strategies (parallel, sequential)
-- **Comprehensive Testing**: Extensive unit and integration test coverage
-- **Production Ready**: Thread-safe, cancellation-aware, with robust error handling
+### 🚀 AxisCore.Mediator
+
+[![NuGet](https://img.shields.io/nuget/v/AxisCore.Mediator.svg)](https://www.nuget.org/packages/AxisCore.Mediator/)
+
+A high-performance mediator pattern implementation providing request/response and pub/sub messaging for decoupled architectures.
+
+**Features:**
+- ValueTask-based APIs for zero-allocation synchronous operations
+- Pipeline behaviors for cross-cutting concerns
+- Request/response, pub/sub, and streaming patterns
+- Minimal dependencies (only Microsoft.Extensions abstractions)
+- Multi-targeting: .NET 6, 8, 9, and 10
+
+**Quick Start:**
+```csharp
+// Setup
+services.AddMediator();
+
+// Define request and handler
+public record GetUserQuery(int Id) : IRequest<User>;
+
+public class GetUserHandler : IRequestHandler<GetUserQuery, User>
+{
+    public async ValueTask<User> Handle(GetUserQuery request, CancellationToken ct)
+    {
+        return await _repository.GetUserAsync(request.Id, ct);
+    }
+}
+
+// Use it
+var user = await _mediator.Send(new GetUserQuery(123));
+```
+
+---
+
+### 🔄 AxisCore.Mapper
+
+A high-performance object mapper with automatic type conversion, collection handling, and compiled expressions.
+
+**Features:**
+- Automatic type conversion (int ↔ string, primitives, etc.)
+- Collection mapping (List, Array, Dictionary)
+- Nullable type handling
+- Case-insensitive property matching
+- Custom mapping configuration
+- Compiled expression caching for performance
+- Multi-targeting: .NET 6, 8, 9, and 10
+
+**Quick Start:**
+```csharp
+// Setup
+services.AddMapper();
+
+// Use it
+var source = new Person { Name = "John", Age = 30 };
+var dto = _mapper.Map<PersonDto>(source);
+
+// Automatic type conversion
+var obj = new { Count = 42 };
+var result = _mapper.Map<WithString>(obj);
+// result.Count = "42" (int to string)
+
+// Collections with type conversion
+var nums = new { Values = new[] { 1, 2, 3 } };
+var mapped = _mapper.Map<WithStringList>(nums);
+// mapped.Values = ["1", "2", "3"]
+
+// Invalid conversion throws exception
+var bad = new { Age = "hello" };
+_mapper.Map<WithInt>(bad); // Throws: Cannot convert 'hello' to int
+```
+
+[View AxisCore.Mapper Documentation →](src/AxisCore.Mapper/README.md)
+
+---
 
 ## Installation
 
+Install via NuGet:
+
 ```bash
+# Mediator
 dotnet add package AxisCore.Mediator
+
+# Mapper
+dotnet add package AxisCore.Mapper
+
+# Or both
+dotnet add package AxisCore.Mediator
+dotnet add package AxisCore.Mapper
 ```
 
-## Quick Start
+## Design Philosophy
 
-### 1. Define a Request and Handler
+AxisCore libraries are built with the following principles:
+
+- **Performance First**: Compiled expressions, caching, and ValueTask for minimal allocations
+- **Minimal Dependencies**: Only essential Microsoft.Extensions abstractions
+- **Developer Experience**: Clean APIs, comprehensive documentation, and extensive testing
+- **Production Ready**: Multi-targeting, error handling, and battle-tested patterns
+- **Type Safety**: Leveraging C# type system for compile-time safety
+
+## Target Frameworks
+
+All libraries support:
+- .NET 10 (preview)
+- .NET 9 (current)
+- .NET 8 (LTS)
+- .NET 6 (LTS)
+
+## Project Structure
+
+```
+AxisCore/
+├── src/
+│   ├── AxisCore.Mediator/          # Mediator pattern implementation
+│   └── AxisCore.Mapper/            # Object mapper implementation
+├── tests/
+│   ├── AxisCore.Mediator.Tests/
+│   ├── AxisCore.Mediator.IntegrationTests/
+│   └── AxisCore.Mapper.UnitTests/
+├── benchmarks/
+│   └── AxisCore.Mediator.Benchmarks/
+└── samples/
+    └── BasicUsage/
+```
+
+## Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/tuzajohn/AxisCore.git
+cd AxisCore
+
+# Build the solution
+dotnet build
+
+# Run tests
+dotnet test
+
+# Run benchmarks
+dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
+```
+
+## Dependencies
+
+All AxisCore libraries have minimal external dependencies:
+
+- **AxisCore.Mediator**:
+  - Microsoft.Extensions.DependencyInjection.Abstractions
+  - Microsoft.Extensions.Logging.Abstractions
+
+- **AxisCore.Mapper**:
+  - Microsoft.Extensions.DependencyInjection.Abstractions
+
+## Using Both Libraries Together
 
 ```csharp
-using AxisCore.Mediator;
+// Configure services
+services.AddMediator();
+services.AddMapper();
 
-// Define a request
-public class GreetingRequest : IRequest<string>
+// Handler that uses mapper
+public class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
 {
-    public string Name { get; set; }
-}
+    private readonly IUserRepository _repository;
+    private readonly IMapper _mapper;
 
-// Define a handler
-public class GreetingRequestHandler : IRequestHandler<GreetingRequest, string>
-{
-    public ValueTask<string> Handle(GreetingRequest request, CancellationToken cancellationToken)
+    public CreateUserHandler(IUserRepository repository, IMapper mapper)
     {
-        return new ValueTask<string>($"Hello, {request.Name}!");
+        _repository = repository;
+        _mapper = mapper;
     }
-}
-```
 
-### 2. Register with DI
-
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-using AxisCore.Mediator.DependencyInjection;
-
-var services = new ServiceCollection();
-
-// Auto-scan and register all handlers from the calling assembly
-services.AddMediatorFromAssembly();
-
-// Or scan specific assemblies
-services.AddMediator(new[] { typeof(Program).Assembly });
-
-var provider = services.BuildServiceProvider();
-```
-
-### 3. Send Requests
-
-```csharp
-var mediator = provider.GetRequiredService<IMediator>();
-
-var response = await mediator.Send(new GreetingRequest { Name = "World" });
-// Output: "Hello, World!"
-```
-
-## Core Concepts
-
-### Requests and Handlers
-
-Requests represent actions or queries. Handlers contain the logic to process them.
-
-```csharp
-// Request with response
-public class CreateOrderCommand : IRequest<OrderResult>
-{
-    public string CustomerId { get; set; }
-    public decimal Amount { get; set; }
-}
-
-public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderResult>
-{
-    public ValueTask<OrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async ValueTask<UserDto> Handle(CreateUserCommand command, CancellationToken ct)
     {
-        // Business logic here
-        return new ValueTask<OrderResult>(new OrderResult { OrderId = Guid.NewGuid() });
-    }
-}
+        // Map command to entity
+        var user = _mapper.Map<User>(command);
 
-// Usage
-var result = await mediator.Send(new CreateOrderCommand { CustomerId = "123", Amount = 99.99m });
-```
+        // Save to repository
+        await _repository.AddAsync(user, ct);
 
-### Notifications
-
-Notifications are published to multiple handlers (pub/sub pattern).
-
-```csharp
-// Define notification
-public class OrderCreatedNotification : INotification
-{
-    public string OrderId { get; set; }
-}
-
-// Define handlers (multiple handlers can handle the same notification)
-public class SendEmailHandler : INotificationHandler<OrderCreatedNotification>
-{
-    public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
-    {
-        // Send email logic
-        return ValueTask.CompletedTask;
-    }
-}
-
-public class UpdateInventoryHandler : INotificationHandler<OrderCreatedNotification>
-{
-    public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
-    {
-        // Update inventory logic
-        return ValueTask.CompletedTask;
+        // Map entity to DTO
+        return _mapper.Map<UserDto>(user);
     }
 }
 
-// Usage
-await mediator.Publish(new OrderCreatedNotification { OrderId = "ORD-123" });
+// Use in application
+var command = new CreateUserCommand { Name = "John Doe", Email = "john@example.com" };
+var userDto = await _mediator.Send(command);
 ```
 
-### Pipeline Behaviors
+## Performance
 
-Pipeline behaviors wrap around request handlers, enabling cross-cutting concerns like logging, validation, and performance monitoring.
+AxisCore libraries are designed for high performance:
+
+- **Compiled Expressions**: Handler resolution and mapping logic compiled at runtime
+- **Caching**: Type mappings and handler delegates cached to avoid reflection overhead
+- **ValueTask**: Used in hot paths to avoid allocations for synchronous operations
+- **Minimal Allocations**: Careful design to reduce GC pressure
+
+### AxisCore.Mediator Benchmarks
+
+| Method           | Mean     | Error   | Allocated |
+|-----------------|----------|---------|-----------|
+| AxisCore_Send    | 45.2 ns  | 0.4 ns  | 0 B       |
+| AxisCore_Publish | 123.1 ns | 2.1 ns  | 0 B       |
+
+Run the benchmarks:
+
+```bash
+cd benchmarks/AxisCore.Mediator.Benchmarks
+dotnet run -c Release
+```
+
+## Examples and Documentation
+
+### AxisCore.Mediator
+
+- [Full Documentation](docs/API.md)
+- [Migration from MediatR](docs/MIGRATION.md)
+- [Performance Guide](docs/PERFORMANCE.md)
+- [Best Practices](docs/BEST_PRACTICES.md)
+- [Basic Usage Sample](samples/BasicUsage/)
+
+### AxisCore.Mapper
+
+- [Full Documentation](src/AxisCore.Mapper/README.md)
+
+## Advanced Scenarios
+
+### Pipeline Behavior with Mapping
 
 ```csharp
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class MappingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
+    private readonly IMapper _mapper;
 
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+    public MappingBehavior(IMapper mapper)
     {
-        _logger = logger;
+        _mapper = mapper;
     }
 
     public async ValueTask<TResponse> Handle(
@@ -154,158 +256,83 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Handling {RequestName}", typeof(TRequest).Name);
+        // Pre-processing with mapping
+        var normalized = _mapper.Map<NormalizedRequest>(request);
+
+        // Continue pipeline
         var response = await next();
-        _logger.LogInformation("Handled {RequestName}", typeof(TRequest).Name);
-        return response;
+
+        // Post-processing with mapping
+        return _mapper.Map<TResponse>(response);
+    }
+}
+```
+
+### Validation with Type Conversion
+
+```csharp
+public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+{
+    public async ValueTask<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
+    {
+        // Validate before processing
+        ValidateRequest(request);
+
+        return await next();
+    }
+
+    private void ValidateRequest(TRequest request)
+    {
+        // Validation logic
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
     }
 }
 
 // Register
-services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-```
-
-### Streaming Responses
-
-For scenarios requiring streaming data:
-
-```csharp
-public class GetLogsRequest : IStreamRequest<LogEntry>
-{
-    public DateTime FromDate { get; set; }
-}
-
-public class GetLogsHandler : IStreamRequestHandler<GetLogsRequest, LogEntry>
-{
-    public async IAsyncEnumerable<LogEntry> Handle(
-        GetLogsRequest request,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        await foreach (var log in FetchLogsAsync(request.FromDate, cancellationToken))
-        {
-            yield return log;
-        }
-    }
-}
-
-// Usage
-await foreach (var log in mediator.CreateStream(new GetLogsRequest { FromDate = DateTime.UtcNow.AddDays(-7) }))
-{
-    Console.WriteLine(log);
-}
-```
-
-## Configuration
-
-### Publishing Strategies
-
-Control how notifications are published to multiple handlers:
-
-```csharp
-services.AddMediator(options =>
-{
-    // Publish to all handlers in parallel (default)
-    options.NotificationPublisherStrategy = NotificationPublisherStrategy.PublishParallel;
-
-    // Or publish sequentially
-    // options.NotificationPublisherStrategy = NotificationPublisherStrategy.PublishSequential;
-
-    // Or stop on first exception
-    // options.NotificationPublisherStrategy = NotificationPublisherStrategy.PublishSequentialStopOnException;
-});
-```
-
-### Service Lifetimes
-
-Specify handler lifetimes:
-
-```csharp
-// Transient (default)
-services.AddMediatorFromAssembly(lifetime: ServiceLifetime.Transient);
-
-// Scoped
-services.AddMediatorFromAssembly(lifetime: ServiceLifetime.Scoped);
-
-// Or manually register
-services.AddRequestHandler<MyRequest, MyResponse, MyHandler>(ServiceLifetime.Scoped);
-```
-
-## Built-in Behaviors
-
-### Logging Behavior
-
-```csharp
-services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-```
-
-### Performance Monitoring
-
-```csharp
-services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
-```
-
-### Validation
-
-```csharp
 services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 ```
 
-## Performance
-
-AxisCore.Mediator is designed for high-performance scenarios:
-
-- **ValueTask**: Reduces allocations for synchronous or cached operations
-- **Handler Caching**: Compiled delegates cached for fast resolution
-- **Minimal Allocations**: Zero-allocation hot path for simple requests
-- **Concurrent Safe**: Thread-safe handler resolution and caching
-
-### Benchmarks
-
-| Method           | Mean     | Error   | Allocated |
-|-----------------|----------|---------|-----------|
-| AxisCore_Send    | 45.2 ns  | 0.4 ns  | 0 B       |
-| MediatR_Send    | 78.3 ns  | 1.2 ns  | 64 B      |
-| AxisCore_Publish | 123.1 ns | 2.1 ns  | 0 B       |
-| MediatR_Publish | 198.4 ns | 3.4 ns  | 128 B     |
-
-*Run your own benchmarks:*
-```bash
-dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
-```
-
-## Migration from MediatR
-
-See [MIGRATION.md](docs/MIGRATION.md) for a detailed migration guide.
-
-**Key Differences:**
-- Handlers return `ValueTask<T>` instead of `Task<T>`
-- Some MediatR-specific features may differ (see migration guide)
-
-## Documentation
-
-- [API Documentation](docs/API.md)
-- [Migration Guide](docs/MIGRATION.md)
-- [Performance Guide](docs/PERFORMANCE.md)
-- [Best Practices](docs/BEST_PRACTICES.md)
-
-## Examples
-
-See the [samples](samples/) directory for complete examples:
-- [Basic Usage](samples/BasicUsage/)
-
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Submit a pull request
+
+## Support
+
+- **Documentation**: See individual library README files
+- **Issues**: [GitHub Issues](https://github.com/tuzajohn/AxisCore/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/tuzajohn/AxisCore/discussions)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## Roadmap
 
-- **Issues**: [GitHub Issues](https://github.com/tuzajohn/AxisCore/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/tuzajohn/AxisCore/discussions)
+- [x] AxisCore.Mediator - High-performance mediator pattern
+- [x] AxisCore.Mapper - High-performance object mapper
+- [ ] AxisCore.Validation - Fluent validation library
+- [ ] Source generators for compile-time handler registration
+- [ ] Additional collection types support
+- [ ] Expression-based mapping configuration
 
 ## Acknowledgments
 
-Inspired by [MediatR](https://github.com/jbogard/MediatR) by Jimmy Bogard. This library aims to provide a similar developer experience with enhanced performance characteristics.
+- **AxisCore.Mediator** is inspired by [MediatR](https://github.com/jbogard/MediatR) by Jimmy Bogard
+- **AxisCore.Mapper** is inspired by [AutoMapper](https://github.com/AutoMapper/AutoMapper)
+
+Both libraries aim to provide similar developer experiences with enhanced performance characteristics.
+
+---
+
+**Built with ❤️ for the .NET community**
