@@ -95,16 +95,16 @@ public sealed class Mapper : IMapper
             return ConvertValue(source, underlyingDestType);
         }
 
+        // Handle dictionaries (must check before collections since dictionaries implement IEnumerable)
+        if (IsDictionary(destinationType))
+        {
+            return MapDictionary(source, sourceType, destinationType);
+        }
+
         // Handle collections
         if (IsCollection(destinationType))
         {
             return MapCollection(source, sourceType, destinationType);
-        }
-
-        // Handle dictionaries
-        if (IsDictionary(destinationType))
-        {
-            return MapDictionary(source, sourceType, destinationType);
         }
 
         // Handle complex objects
