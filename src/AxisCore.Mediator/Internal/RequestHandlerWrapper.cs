@@ -49,7 +49,8 @@ internal sealed class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHa
         };
 
         // Wrap with behaviors in reverse order (iterate forward to apply in LIFO)
-        foreach (var behavior in behaviors.Reverse())
+        behaviors.Reverse();
+        foreach (var behavior in behaviors)
         {
             handler = WrapBehavior(behavior, handler, typedRequest, cancellationToken);
         }
