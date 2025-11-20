@@ -8,7 +8,7 @@ namespace AxisCore.Mediator;
 /// <typeparam name="TResponse">Response type</typeparam>
 internal abstract class RequestHandlerWrapper<TResponse>
 {
-    public abstract ValueTask<TResponse> Handle(
+    public abstract Task<TResponse> Handle(
         IRequest<TResponse> request,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken);
@@ -22,7 +22,7 @@ internal abstract class RequestHandlerWrapper<TResponse>
 internal sealed class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public override async ValueTask<TResponse> Handle(
+    public override async Task<TResponse> Handle(
         IRequest<TResponse> request,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)

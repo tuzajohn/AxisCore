@@ -12,7 +12,7 @@ public interface IMediator
     /// <param name="request">Request object</param>
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>A task that represents the send operation. The task result contains the handler response.</returns>
-    ValueTask<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
+    Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Publish a notification to multiple handlers.
@@ -21,7 +21,7 @@ public interface IMediator
     /// <param name="notification">Notification object</param>
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>A task that represents the publish operation</returns>
-    ValueTask Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
+    Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
         where TNotification : INotification;
 
     /// <summary>
@@ -30,7 +30,7 @@ public interface IMediator
     /// <param name="notification">Notification object</param>
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>A task that represents the publish operation</returns>
-    ValueTask Publish(object notification, CancellationToken cancellationToken = default);
+    Task Publish(object notification, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a stream from a request.

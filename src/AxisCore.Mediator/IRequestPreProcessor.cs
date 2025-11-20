@@ -11,5 +11,5 @@ public interface IRequestPreProcessor<in TRequest>
     /// </summary>
     /// <param name="request">The request</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    ValueTask Process(TRequest request, CancellationToken cancellationToken);
+    Task Process(TRequest request, CancellationToken cancellationToken);
 }

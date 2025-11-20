@@ -16,7 +16,7 @@ public interface IPipelineBehavior<in TRequest, TResponse>
     /// <param name="next">The next delegate in the pipeline (eventually the handler)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The response from the handler or behavior</returns>
-    ValueTask<TResponse> Handle(
+    Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken);
@@ -27,4 +27,4 @@ public interface IPipelineBehavior<in TRequest, TResponse>
 /// </summary>
 /// <typeparam name="TResponse">Response type</typeparam>
 /// <returns>Awaitable task returning the response</returns>
-public delegate ValueTask<TResponse> RequestHandlerDelegate<TResponse>();
+public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();

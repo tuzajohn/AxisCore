@@ -9,7 +9,7 @@ namespace AxisCore.Mediator;
 internal abstract class NotificationHandlersWrapper<TNotification>
     where TNotification : INotification
 {
-    public abstract ValueTask Handle(
+    public abstract Task Handle(
         TNotification notification,
         IServiceProvider serviceProvider,
         NotificationPublisherStrategy strategy,
@@ -23,7 +23,7 @@ internal abstract class NotificationHandlersWrapper<TNotification>
 internal sealed class NotificationHandlersWrapperImpl<TNotification> : NotificationHandlersWrapper<TNotification>
     where TNotification : INotification
 {
-    public override async ValueTask Handle(
+    public override async Task Handle(
         TNotification notification,
         IServiceProvider serviceProvider,
         NotificationPublisherStrategy strategy,
@@ -50,7 +50,7 @@ internal sealed class NotificationHandlersWrapperImpl<TNotification> : Notificat
         }
     }
 
-    private static async ValueTask PublishParallel(
+    private static async Task PublishParallel(
         TNotification notification,
         IEnumerable<INotificationHandler<TNotification>> handlers,
         CancellationToken cancellationToken)
@@ -65,7 +65,7 @@ internal sealed class NotificationHandlersWrapperImpl<TNotification> : Notificat
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
-    private static async ValueTask PublishSequential(
+    private static async Task PublishSequential(
         TNotification notification,
         IEnumerable<INotificationHandler<TNotification>> handlers,
         CancellationToken cancellationToken,

@@ -29,7 +29,7 @@ public sealed class Mediator : IMediator
     }
 
     /// <inheritdoc />
-    public async ValueTask<TResponse> Send<TResponse>(
+    public async Task<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default)
     {
@@ -45,7 +45,7 @@ public sealed class Mediator : IMediator
     }
 
     /// <inheritdoc />
-    public ValueTask Publish<TNotification>(
+    public Task Publish<TNotification>(
         TNotification notification,
         CancellationToken cancellationToken = default)
         where TNotification : INotification
@@ -59,7 +59,7 @@ public sealed class Mediator : IMediator
     }
 
     /// <inheritdoc />
-    public ValueTask Publish(
+    public Task Publish(
         object notification,
         CancellationToken cancellationToken = default)
     {
@@ -92,7 +92,7 @@ public sealed class Mediator : IMediator
         return handler.Handle(request, _serviceProvider, cancellationToken);
     }
 
-    private async ValueTask PublishCore<TNotification>(
+    private async Task PublishCore<TNotification>(
         TNotification notification,
         CancellationToken cancellationToken)
         where TNotification : INotification
@@ -104,7 +104,7 @@ public sealed class Mediator : IMediator
             .ConfigureAwait(false);
     }
 
-    private ValueTask PublishNotification(
+    private Task PublishNotification(
         INotification notification,
         CancellationToken cancellationToken)
     {
@@ -114,7 +114,7 @@ public sealed class Mediator : IMediator
             .MakeGenericMethod(notificationType);
 
         var task = method.Invoke(this, new object[] { notification, cancellationToken });
-        return (ValueTask)task!;
+        return (Task)task!;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
