@@ -84,7 +84,7 @@ public sealed class MyHandler : IRequestHandler<MyRequest, MyResponse>
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async ValueTask<MyResponse> Handle(
+    public async Task<MyResponse> Handle(
         MyRequest request,
         CancellationToken cancellationToken)
     {
@@ -95,7 +95,7 @@ public sealed class MyHandler : IRequestHandler<MyRequest, MyResponse>
 
 ### Performance Considerations
 
-- Prefer `ValueTask<T>` over `Task<T>` where appropriate
+- Use `Task<T>` for async operations
 - Avoid unnecessary allocations
 - Use `ConfigureAwait(false)` in library code
 - Cache expensive operations
@@ -226,7 +226,7 @@ All public APIs must have XML documentation:
 /// <param name="request">Request object</param>
 /// <param name="cancellationToken">Optional cancellation token</param>
 /// <returns>A task representing the send operation</returns>
-public ValueTask<TResponse> Send<TResponse>(
+public Task<TResponse> Send<TResponse>(
     IRequest<TResponse> request,
     CancellationToken cancellationToken = default);
 ```

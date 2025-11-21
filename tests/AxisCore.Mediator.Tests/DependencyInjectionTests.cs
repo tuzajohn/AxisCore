@@ -97,9 +97,9 @@ public class DependencyInjectionTests
 
     public class SampleRequestHandler : IRequestHandler<SampleRequest, string>
     {
-        public ValueTask<string> Handle(SampleRequest request, CancellationToken cancellationToken)
+        public Task<string> Handle(SampleRequest request, CancellationToken cancellationToken)
         {
-            return new ValueTask<string>($"Sample: {request.Value}");
+            return Task.FromResult($"Sample: {request.Value}");
         }
     }
 
@@ -109,9 +109,9 @@ public class DependencyInjectionTests
 
     public class SampleNotificationHandler : INotificationHandler<SampleNotification>
     {
-        public ValueTask Handle(SampleNotification notification, CancellationToken cancellationToken)
+        public Task Handle(SampleNotification notification, CancellationToken cancellationToken)
         {
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

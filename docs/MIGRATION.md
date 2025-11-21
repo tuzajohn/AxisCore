@@ -6,8 +6,8 @@ This guide helps you migrate from MediatR to AxisCore.Mediator. The libraries sh
 
 | Aspect | MediatR | AxisCore.Mediator |
 |--------|---------|------------------|
-| Return Type | `Task<T>` | `ValueTask<T>` |
-| Notification Publishing | `Task` | `ValueTask` |
+| Return Type | `Task<T>` | `Task<T>` |
+| Notification Publishing | `Task` | `Task` |
 | Package Name | `MediatR` | `AxisCore.Mediator` |
 | Registration | `AddMediatR()` | `AddMediator()` |
 
@@ -56,9 +56,10 @@ services.AddMediatorFromAssembly();
 services.AddMediator(new[] { typeof(Program).Assembly });
 ```
 
-### 4. Update Handler Signatures
+### 4. Handler Signatures - No Changes Needed!
 
-**Before (MediatR):**
+Handler signatures are **identical** between MediatR and AxisCore.Mediator:
+
 ```csharp
 public class MyHandler : IRequestHandler<MyRequest, MyResponse>
 {
@@ -70,30 +71,19 @@ public class MyHandler : IRequestHandler<MyRequest, MyResponse>
 }
 ```
 
-**After (AxisCore.Mediator):**
-```csharp
-public class MyHandler : IRequestHandler<MyRequest, MyResponse>
-{
-    public ValueTask<MyResponse> Handle(MyRequest request, CancellationToken cancellationToken)
-    {
-        var response = new MyResponse();
-        return new ValueTask<MyResponse>(response);
-    }
-}
-```
-
 For async operations:
 ```csharp
-public async ValueTask<MyResponse> Handle(MyRequest request, CancellationToken cancellationToken)
+public async Task<MyResponse> Handle(MyRequest request, CancellationToken cancellationToken)
 {
     var result = await SomeAsyncOperation();
     return new MyResponse { Data = result };
 }
 ```
 
-### 5. Update Notification Handlers
+### 5. Notification Handlers - No Changes Needed!
 
-**Before (MediatR):**
+Notification handler signatures are **identical** between MediatR and AxisCore.Mediator:
+
 ```csharp
 public class MyNotificationHandler : INotificationHandler<MyNotification>
 {
@@ -105,46 +95,16 @@ public class MyNotificationHandler : INotificationHandler<MyNotification>
 }
 ```
 
-**After (AxisCore.Mediator):**
-```csharp
-public class MyNotificationHandler : INotificationHandler<MyNotification>
-{
-    public ValueTask Handle(MyNotification notification, CancellationToken cancellationToken)
-    {
-        // Handle notification
-        return ValueTask.CompletedTask;
-    }
-}
-```
+### 6. Pipeline Behaviors - No Changes Needed!
 
-### 6. Update Pipeline Behaviors
+Pipeline behavior signatures are **identical** between MediatR and AxisCore.Mediator:
 
-**Before (MediatR):**
 ```csharp
 public class LoggingBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
-    {
-        // Before logic
-        var response = await next();
-        // After logic
-        return response;
-    }
-}
-```
-
-**After (AxisCore.Mediator):**
-```csharp
-public class LoggingBehavior<TRequest, TResponse>
-    : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
-{
-    public async ValueTask<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
@@ -185,7 +145,7 @@ await _mediator.Publish(new MyNotification());
 
 ### Pipeline Behaviors
 
-✅ **Compatible with Changes** - Update return types to `ValueTask<T>`
+✅ **Fully Compatible** - Same return types `Task<T>`
 
 ### Pre/Post Processors
 
@@ -253,11 +213,9 @@ services.AddMediator(
 
 ## Breaking Changes & Differences
 
-### 1. ValueTask vs Task
+### 1. API Compatibility
 
-The most significant change is the use of `ValueTask<T>` instead of `Task<T>`. This provides better performance for synchronous operations but requires updating all handler signatures.
-
-**Migration tip:** Most async code can be adapted by simply changing `Task<T>` to `ValueTask<T>` and `Task` to `ValueTask`.
+Both MediatR and AxisCore.Mediator use `Task<T>` for handlers, making the APIs fully compatible. The main differences are in namespaces and registration methods.
 
 ### 2. Unit Type
 
@@ -299,7 +257,7 @@ services.AddMediator(new[] { assembly1, assembly2 });
 
 After migration, you should see:
 - **Reduced allocations** for simple request/response scenarios
-- **Better performance** due to ValueTask and handler caching
+- **Better performance** due to Task and handler caching
 - **Lower latency** for synchronous operations
 
 Run benchmarks to measure the improvement:
@@ -309,51 +267,27 @@ dotnet run --project benchmarks/AxisCore.Mediator.Benchmarks -c Release
 
 ## Common Pitfalls
 
-### 1. Forgetting to Update Return Types
+### 1. Forgetting Namespace Changes
 
 ❌ **Wrong:**
 ```csharp
-public Task<MyResponse> Handle(...) // Still using Task
+using MediatR; // Old namespace
 ```
 
 ✅ **Correct:**
 ```csharp
-public ValueTask<MyResponse> Handle(...) // Using ValueTask
+using AxisCore.Mediator;
+using AxisCore.Mediator.DependencyInjection;
 ```
 
-### 2. Async/Await with ValueTask
+### 2. Unit Test Updates
 
-✅ **Good:**
+Update your test mocks/stubs to use the new namespace:
+
 ```csharp
-public async ValueTask<MyResponse> Handle(...)
-{
-    var result = await SomeOperation();
-    return new MyResponse { Data = result };
-}
-```
-
-✅ **Also Good (for synchronous):**
-```csharp
-public ValueTask<MyResponse> Handle(...)
-{
-    return new ValueTask<MyResponse>(new MyResponse());
-}
-```
-
-### 3. Unit Test Updates
-
-Update your test mocks/stubs:
-
-**Before:**
-```csharp
+// Use AxisCore.Mediator.IMediator instead of MediatR.IMediator
 _mediator.Send(Arg.Any<MyRequest>())
     .Returns(Task.FromResult(new MyResponse()));
-```
-
-**After:**
-```csharp
-_mediator.Send(Arg.Any<MyRequest>())
-    .Returns(new ValueTask<MyResponse>(new MyResponse()));
 ```
 
 ## Testing the Migration
@@ -381,9 +315,9 @@ For large codebases:
 ## Conclusion
 
 Migration from MediatR to AxisCore.Mediator is straightforward:
-- Update package references
-- Change `Task` to `ValueTask`
-- Update registration calls
-- Enjoy improved performance!
+- Update package references and namespaces
+- Update registration calls (AddMediatR -> AddMediator)
+- Handler signatures are identical - no code changes needed!
+- Enjoy built-in behaviors and enhanced streaming support!
 
 Most changes are mechanical and can be done quickly with find-and-replace for many cases.

@@ -39,25 +39,25 @@ public class NotificationBenchmarks
 
     public class AxisCorePingNotificationHandler1 : AxisCore.Mediator.INotificationHandler<AxisCorePingNotification>
     {
-        public ValueTask Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
+        public Task Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
         {
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
     public class AxisCorePingNotificationHandler2 : AxisCore.Mediator.INotificationHandler<AxisCorePingNotification>
     {
-        public ValueTask Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
+        public Task Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
         {
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
     public class AxisCorePingNotificationHandler3 : AxisCore.Mediator.INotificationHandler<AxisCorePingNotification>
     {
-        public ValueTask Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
+        public Task Handle(AxisCorePingNotification notification, CancellationToken cancellationToken)
         {
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

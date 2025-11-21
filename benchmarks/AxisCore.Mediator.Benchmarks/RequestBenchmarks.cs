@@ -37,9 +37,9 @@ public class RequestBenchmarks
 
     public class AxisCorePingHandler : AxisCore.Mediator.IRequestHandler<AxisCorePingRequest, string>
     {
-        public ValueTask<string> Handle(AxisCorePingRequest request, CancellationToken cancellationToken)
+        public Task<string> Handle(AxisCorePingRequest request, CancellationToken cancellationToken)
         {
-            return new ValueTask<string>("Pong");
+            return Task.FromResult("Pong");
         }
     }
 }

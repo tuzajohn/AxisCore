@@ -36,7 +36,7 @@ public class MediatorTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            mediator.Send<string>(null!).AsTask());
+            mediator.Send<string>(null!));
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class MediatorTests
 
         // Act & Assert
         await Assert.ThrowsAsync<TaskCanceledException>(() =>
-            mediator.Send(new CancellableRequest(), cts.Token).AsTask());
+            mediator.Send(new CancellableRequest(), cts.Token));
     }
 
     [Fact]
@@ -148,9 +148,9 @@ public class MediatorTests
 
     public class TestRequestHandler : IRequestHandler<TestRequest, string>
     {
-        public ValueTask<string> Handle(TestRequest request, CancellationToken cancellationToken)
+        public Task<string> Handle(TestRequest request, CancellationToken cancellationToken)
         {
-            return new ValueTask<string>($"Handled: {request.Value}");
+            return Task.FromResult($"Handled: {request.Value}");
         }
     }
 
@@ -160,7 +160,7 @@ public class MediatorTests
 
     public class CancellableRequestHandler : IRequestHandler<CancellableRequest, string>
     {
-        public async ValueTask<string> Handle(CancellableRequest request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CancellableRequest request, CancellationToken cancellationToken)
         {
             await Task.Delay(1000, cancellationToken);
             return "Done";
@@ -169,7 +169,7 @@ public class MediatorTests
 
     public class TestPipelineBehavior : IPipelineBehavior<TestRequest, string>
     {
-        public async ValueTask<string> Handle(
+        public async Task<string> Handle(
             TestRequest request,
             RequestHandlerDelegate<string> next,
             CancellationToken cancellationToken)
@@ -187,10 +187,10 @@ public class MediatorTests
     {
         public static bool Called { get; set; }
 
-        public ValueTask Handle(TestNotification notification, CancellationToken cancellationToken)
+        public Task Handle(TestNotification notification, CancellationToken cancellationToken)
         {
             Called = true;
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
@@ -198,10 +198,10 @@ public class MediatorTests
     {
         public static bool Called { get; set; }
 
-        public ValueTask Handle(TestNotification notification, CancellationToken cancellationToken)
+        public Task Handle(TestNotification notification, CancellationToken cancellationToken)
         {
             Called = true;
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
@@ -209,10 +209,10 @@ public class MediatorTests
     {
         public static bool Called { get; set; }
 
-        public ValueTask Process(TestRequest request, CancellationToken cancellationToken)
+        public Task Process(TestRequest request, CancellationToken cancellationToken)
         {
             Called = true;
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
@@ -220,10 +220,10 @@ public class MediatorTests
     {
         public static bool Called { get; set; }
 
-        public ValueTask Process(TestRequest request, string response, CancellationToken cancellationToken)
+        public Task Process(TestRequest request, string response, CancellationToken cancellationToken)
         {
             Called = true;
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

@@ -4,19 +4,19 @@ AxisCore.Mediator is designed for high-performance scenarios with minimal alloca
 
 ## Key Performance Features
 
-### 1. ValueTask<T> Instead of Task<T>
+### 1. Async Task-Based APIs
 
-**Benefit**: Eliminates allocations for synchronous or cached results
+**Benefit**: Clean async patterns with proper cancellation support
 
 ```csharp
-// Zero allocation for synchronous operations
-public ValueTask<string> Handle(MyRequest request, CancellationToken cancellationToken)
+// Synchronous operations use Task.FromResult
+public Task<string> Handle(MyRequest request, CancellationToken cancellationToken)
 {
-    return new ValueTask<string>("result"); // No heap allocation
+    return Task.FromResult("result");
 }
 
-// Async operations still efficient
-public async ValueTask<string> Handle(MyRequest request, CancellationToken cancellationToken)
+// Async operations
+public async Task<string> Handle(MyRequest request, CancellationToken cancellationToken)
 {
     var result = await _repository.GetAsync(request.Id);
     return result.Name;
@@ -117,23 +117,24 @@ services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,
 services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 ```
 
-### 3. Use ValueTask Correctly
+### 3. Use Task Correctly
 
 ```csharp
-// ✅ Good: Return immediately for cached/synchronous results
-public ValueTask<string> Handle(CachedRequest request, CancellationToken cancellationToken)
+// ✅ Good: Use Task.FromResult for synchronous results
+public Task<string> Handle(CachedRequest request, CancellationToken cancellationToken)
 {
     if (_cache.TryGetValue(request.Key, out var value))
     {
-        return new ValueTask<string>(value); // No allocation
+        return Task.FromResult(value);
     }
-    return new ValueTask<string>(FetchAsync(request.Key, cancellationToken));
+    return FetchAsync(request.Key, cancellationToken);
 }
 
-// ❌ Bad: Wrapping Task in ValueTask unnecessarily
-public ValueTask<string> Handle(MyRequest request, CancellationToken cancellationToken)
+// ✅ Good: Use async/await for async operations
+public async Task<string> Handle(MyRequest request, CancellationToken cancellationToken)
 {
-    return new ValueTask<string>(Task.FromResult("value")); // Creates Task unnecessarily
+    var result = await _repository.GetAsync(request.Id);
+    return result.Name;
 }
 ```
 
@@ -141,7 +142,7 @@ public ValueTask<string> Handle(MyRequest request, CancellationToken cancellatio
 
 ```csharp
 // ❌ Bad: Creates closure
-public async ValueTask<string> Handle(MyRequest request, CancellationToken cancellationToken)
+public async Task<string> Handle(MyRequest request, CancellationToken cancellationToken)
 {
     var results = await Task.WhenAll(
         request.Items.Select(async item => await ProcessAsync(item))
@@ -150,7 +151,7 @@ public async ValueTask<string> Handle(MyRequest request, CancellationToken cance
 }
 
 // ✅ Better: No closure
-public async ValueTask<string> Handle(MyRequest request, CancellationToken cancellationToken)
+public async Task<string> Handle(MyRequest request, CancellationToken cancellationToken)
 {
     var tasks = new Task<Result>[request.Items.Count];
     for (int i = 0; i < request.Items.Count; i++)
@@ -202,9 +203,9 @@ public class SimpleRequest : IRequest<int>
 
 public class SimpleHandler : IRequestHandler<SimpleRequest, int>
 {
-    public ValueTask<int> Handle(SimpleRequest request, CancellationToken cancellationToken)
+    public Task<int> Handle(SimpleRequest request, CancellationToken cancellationToken)
     {
-        return new ValueTask<int>(request.Value * 2);
+        return new Task<int>(request.Value * 2);
     }
 }
 
@@ -323,7 +324,7 @@ var result = await mediator.Send(new MyRequest());
 
 ```csharp
 // Library code should use ConfigureAwait(false)
-public async ValueTask<MyResponse> Handle(MyRequest request, CancellationToken cancellationToken)
+public async Task<MyResponse> Handle(MyRequest request, CancellationToken cancellationToken)
 {
     var data = await _repository.GetAsync(request.Id).ConfigureAwait(false);
     return new MyResponse { Data = data };
@@ -354,7 +355,7 @@ In production scenarios:
 ## Conclusion
 
 AxisCore.Mediator is built for performance:
-- Use `ValueTask` for minimal allocations
+- Task-based async APIs
 - Handler caching eliminates reflection overhead
 - Choose appropriate lifetimes and strategies
 - Profile and measure your specific use cases

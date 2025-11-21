@@ -84,9 +84,9 @@ public class GreetingRequest : IRequest<string>
 
 public class GreetingRequestHandler : IRequestHandler<GreetingRequest, string>
 {
-    public ValueTask<string> Handle(GreetingRequest request, CancellationToken cancellationToken)
+    public Task<string> Handle(GreetingRequest request, CancellationToken cancellationToken)
     {
-        return new ValueTask<string>($"Hello, {request.Name}!");
+        return Task.FromResult($"Hello, {request.Name}!");
     }
 }
 
@@ -114,7 +114,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
         _logger = logger;
     }
 
-    public ValueTask<OrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public Task<OrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Creating order for customer {CustomerId}", request.CustomerId);
 
@@ -128,7 +128,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
             TotalAmount = totalAmount
         };
 
-        return new ValueTask<OrderResult>(result);
+        return Task.FromResult(result);
     }
 }
 
@@ -150,11 +150,11 @@ public class SendEmailNotificationHandler : INotificationHandler<OrderCreatedNot
         _logger = logger;
     }
 
-    public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
+    public Task Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Sending email for order {OrderId} to customer {CustomerId}",
             notification.OrderId, notification.CustomerId);
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 }
 
@@ -167,10 +167,10 @@ public class UpdateInventoryNotificationHandler : INotificationHandler<OrderCrea
         _logger = logger;
     }
 
-    public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
+    public Task Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Updating inventory for order {OrderId}", notification.OrderId);
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 }
 

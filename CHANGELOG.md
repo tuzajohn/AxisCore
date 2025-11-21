@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Extension methods for `IServiceCollection`
   - Support for Transient, Scoped, and Singleton lifetimes
 - Performance optimizations
-  - ValueTask-based APIs for minimal allocations
+  - Task-based async APIs
   - Handler caching with compiled delegates
   - ConcurrentDictionary for thread-safe caching
   - AggressiveInlining for hot path methods

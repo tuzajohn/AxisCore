@@ -22,7 +22,7 @@ public class ConcurrencyTests
             .Select(i => mediator.Send(new ConcurrentRequest { Value = i }))
             .ToArray();
 
-        var results = await Task.WhenAll(tasks.Select(t => t.AsTask()));
+        var results = await Task.WhenAll(tasks.Select(t => t));
 
         // Assert
         results.Should().HaveCount(100);
@@ -47,7 +47,7 @@ public class ConcurrencyTests
             .Select(_ => mediator.Publish(new ConcurrentNotification()))
             .ToArray();
 
-        await Task.WhenAll(tasks.Select(t => t.AsTask()));
+        await Task.WhenAll(tasks.Select(t => t));
 
         // Allow handlers to complete
         await Task.Delay(100);
@@ -64,7 +64,7 @@ public class ConcurrencyTests
 
     public class ConcurrentRequestHandler : IRequestHandler<ConcurrentRequest, int>
     {
-        public async ValueTask<int> Handle(ConcurrentRequest request, CancellationToken cancellationToken)
+        public async Task<int> Handle(ConcurrentRequest request, CancellationToken cancellationToken)
         {
             await Task.Delay(10, cancellationToken);
             return request.Value;
@@ -79,10 +79,10 @@ public class ConcurrencyTests
     {
         public static int Count;
 
-        public ValueTask Handle(ConcurrentNotification notification, CancellationToken cancellationToken)
+        public Task Handle(ConcurrentNotification notification, CancellationToken cancellationToken)
         {
             Interlocked.Increment(ref Count);
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

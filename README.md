@@ -14,7 +14,7 @@ High-performance .NET libraries for building modern, efficient applications. Axi
 A high-performance mediator pattern implementation providing request/response and pub/sub messaging for decoupled architectures.
 
 **Features:**
-- Task-based APIs for zero-allocation synchronous operations
+- Task-based async APIs
 - Pipeline behaviors for cross-cutting concerns
 - Request/response, pub/sub, and streaming patterns
 - Minimal dependencies (only Microsoft.Extensions abstractions)
@@ -103,7 +103,7 @@ dotnet add package AxisCore.Mapper
 
 AxisCore libraries are built with the following principles:
 
-- **Performance First**: Compiled expressions, caching, and Task for minimal allocations
+- **Performance First**: Compiled expressions, caching, and optimized async patterns
 - **Minimal Dependencies**: Only essential Microsoft.Extensions abstractions
 - **Developer Experience**: Clean APIs, comprehensive documentation, and extensive testing
 - **Production Ready**: Multi-targeting, error handling, and battle-tested patterns
@@ -204,7 +204,7 @@ AxisCore libraries are designed for high performance:
 
 - **Compiled Expressions**: Handler resolution and mapping logic compiled at runtime
 - **Caching**: Type mappings and handler delegates cached to avoid reflection overhead
-- **Task**: Used in hot paths to avoid allocations for synchronous operations
+- **Async/Await**: Fully asynchronous APIs with proper cancellation support
 - **Minimal Allocations**: Careful design to reduce GC pressure
 
 ### AxisCore.Mediator Benchmarks
