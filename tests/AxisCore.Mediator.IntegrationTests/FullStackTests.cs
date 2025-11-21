@@ -134,7 +134,7 @@ public class FullStackTests
 
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderResult>
     {
-        public ValueTask<OrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public Task<OrderResult> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var result = new OrderResult
             {
@@ -142,7 +142,7 @@ public class FullStackTests
                 Success = true
             };
 
-            return new ValueTask<OrderResult>(result);
+            return Task.FromResult(result);
         }
     }
 
@@ -156,10 +156,10 @@ public class FullStackTests
     {
         public static string? LastOrderId { get; private set; }
 
-        public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
+        public Task Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
         {
             LastOrderId = notification.OrderId;
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
@@ -167,10 +167,10 @@ public class FullStackTests
     {
         public static string? LastProductId { get; private set; }
 
-        public ValueTask Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
+        public Task Handle(OrderCreatedNotification notification, CancellationToken cancellationToken)
         {
             LastProductId = "PROD-123"; // Simulated
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
@@ -192,9 +192,9 @@ public class FullStackTests
             _dependency = dependency;
         }
 
-        public ValueTask<string> Handle(ScopedRequest request, CancellationToken cancellationToken)
+        public Task<string> Handle(ScopedRequest request, CancellationToken cancellationToken)
         {
-            return new ValueTask<string>(_dependency.Id);
+            return Task.FromResult(_dependency.Id);
         }
     }
 
@@ -211,10 +211,10 @@ public class FullStackTests
             _executionOrder = executionOrder;
         }
 
-        public ValueTask<string> Handle(OrderedRequest request, CancellationToken cancellationToken)
+        public Task<string> Handle(OrderedRequest request, CancellationToken cancellationToken)
         {
             _executionOrder.Add("Handler");
-            return new ValueTask<string>("Result");
+            return Task.FromResult("Result");
         }
     }
 
@@ -229,7 +229,7 @@ public class FullStackTests
             _executionOrder = executionOrder;
         }
 
-        public async ValueTask<string> Handle(
+        public async Task<string> Handle(
             OrderedRequest request,
             RequestHandlerDelegate<string> next,
             CancellationToken cancellationToken)

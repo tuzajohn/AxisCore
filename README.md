@@ -14,7 +14,7 @@ High-performance .NET libraries for building modern, efficient applications. Axi
 A high-performance mediator pattern implementation providing request/response and pub/sub messaging for decoupled architectures.
 
 **Features:**
-- ValueTask-based APIs for zero-allocation synchronous operations
+- Task-based async APIs
 - Pipeline behaviors for cross-cutting concerns
 - Request/response, pub/sub, and streaming patterns
 - Minimal dependencies (only Microsoft.Extensions abstractions)
@@ -30,7 +30,7 @@ public record GetUserQuery(int Id) : IRequest<User>;
 
 public class GetUserHandler : IRequestHandler<GetUserQuery, User>
 {
-    public async ValueTask<User> Handle(GetUserQuery request, CancellationToken ct)
+    public async Task<User> Handle(GetUserQuery request, CancellationToken ct)
     {
         return await _repository.GetUserAsync(request.Id, ct);
     }
@@ -103,7 +103,7 @@ dotnet add package AxisCore.Mapper
 
 AxisCore libraries are built with the following principles:
 
-- **Performance First**: Compiled expressions, caching, and ValueTask for minimal allocations
+- **Performance First**: Compiled expressions, caching, and optimized async patterns
 - **Minimal Dependencies**: Only essential Microsoft.Extensions abstractions
 - **Developer Experience**: Clean APIs, comprehensive documentation, and extensive testing
 - **Production Ready**: Multi-targeting, error handling, and battle-tested patterns
@@ -180,7 +180,7 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
         _mapper = mapper;
     }
 
-    public async ValueTask<UserDto> Handle(CreateUserCommand command, CancellationToken ct)
+    public async Task<UserDto> Handle(CreateUserCommand command, CancellationToken ct)
     {
         // Map command to entity
         var user = _mapper.Map<User>(command);
@@ -204,7 +204,7 @@ AxisCore libraries are designed for high performance:
 
 - **Compiled Expressions**: Handler resolution and mapping logic compiled at runtime
 - **Caching**: Type mappings and handler delegates cached to avoid reflection overhead
-- **ValueTask**: Used in hot paths to avoid allocations for synchronous operations
+- **Async/Await**: Fully asynchronous APIs with proper cancellation support
 - **Minimal Allocations**: Careful design to reduce GC pressure
 
 ### AxisCore.Mediator Benchmarks
@@ -250,7 +250,7 @@ public class MappingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         _mapper = mapper;
     }
 
-    public async ValueTask<TResponse> Handle(
+    public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
@@ -273,7 +273,7 @@ public class MappingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public async ValueTask<TResponse> Handle(
+    public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)

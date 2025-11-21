@@ -150,7 +150,7 @@ AxisCore.Mapper is designed for high performance:
 
 - **Compiled Expressions**: Mapping logic is compiled for fast execution
 - **Caching**: Handler mappings are cached to avoid reflection overhead
-- **ValueTask**: Zero-allocation for synchronous operations (when applicable)
+- **Async Support**: Efficient async patterns when applicable
 - **Minimal Allocations**: Efficient object creation and property copying
 
 ## Examples

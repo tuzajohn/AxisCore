@@ -15,10 +15,6 @@ public readonly struct Unit : IEquatable<Unit>, IComparable<Unit>
     /// </summary>
     public static readonly Task<Unit> Task = System.Threading.Tasks.Task.FromResult(Value);
 
-    /// <summary>
-    /// ValueTask from unit.
-    /// </summary>
-    public static readonly ValueTask<Unit> ValueTask = new(Value);
 
     /// <inheritdoc />
     public int CompareTo(Unit other) => 0;

@@ -13,5 +13,5 @@ public interface IRequestPostProcessor<in TRequest, in TResponse>
     /// <param name="request">The request</param>
     /// <param name="response">The response from the handler</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    ValueTask Process(TRequest request, TResponse response, CancellationToken cancellationToken);
+    Task Process(TRequest request, TResponse response, CancellationToken cancellationToken);
 }
