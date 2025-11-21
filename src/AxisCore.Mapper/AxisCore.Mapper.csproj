@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
@@ -10,7 +10,7 @@
 
     <!-- Package Information -->
     <PackageId>AxisCore.Mapper</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>AxisCore</Authors>
     <Company>AxisCore</Company>
     <Product>AxisCore.Mapper</Product>
