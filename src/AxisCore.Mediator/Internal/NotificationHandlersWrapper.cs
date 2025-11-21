@@ -55,7 +55,7 @@ internal sealed class NotificationHandlersWrapperImpl<TNotification> : Notificat
         IEnumerable<INotificationHandler<TNotification>> handlers,
         CancellationToken cancellationToken)
     {
-        var tasks = handlers.Select(h => h.Handle(notification, cancellationToken).AsTask()).ToArray();
+        var tasks = handlers.Select(h => h.Handle(notification, cancellationToken)).ToArray();
 
         if (tasks.Length == 0)
         {
